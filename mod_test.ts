@@ -4,9 +4,9 @@ import type { GetJasonType } from "./mod.ts";
 import * as jason from "./mod.ts";
 
 import {
+  assert,
   assertEquals,
   assertThrows,
-  assert,
 } from "https://deno.land/std@0.113.0/testing/asserts.ts";
 
 Deno.test("string composable", () => {
@@ -129,7 +129,7 @@ Deno.test("object composable", () => {
         inner: {
           name: "hey",
         },
-      }).isOk
+      }).isOk,
     );
 
     assert(
@@ -137,13 +137,13 @@ Deno.test("object composable", () => {
         inner: {
           name: undefined,
         },
-      } as any).isOk
+      } as any).isOk,
     );
 
     assert(
       !schema.validate({
         name: undefined,
-      } as any).isOk
+      } as any).isOk,
     );
   }
 });

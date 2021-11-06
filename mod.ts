@@ -45,7 +45,7 @@ export class ValidatorDiagnostics {
     if (errors.length !== 0) {
       this.debug();
       throw new TypeError(
-        "Failed to validate data. There is most likely more information above."
+        "Failed to validate data. There is most likely more information above.",
       );
     }
   }
@@ -62,12 +62,11 @@ export interface Validator<T = any> {
   /** Returns a boolean indicating whether the value matches the validator's validation. */
   validate: (
     value: T,
-    diagnostics?: ValidatorDiagnostics
+    diagnostics?: ValidatorDiagnostics,
   ) => ValidatorDiagnostics;
 }
 
-export type GetJasonType<T extends Validator> = T extends Validator<infer K>
-  ? K
+export type GetJasonType<T extends Validator> = T extends Validator<infer K> ? K
   : never;
 
 interface MinMax {
@@ -96,7 +95,7 @@ export function string(init: StringInit = {}): Validator<string> {
         value.startsWith(init.startsWith) === false
       ) {
         return diagnostics.pushError(
-          `'${value}' did not start with '${init.startsWith}'`
+          `'${value}' did not start with '${init.startsWith}'`,
         );
       }
 
@@ -105,27 +104,27 @@ export function string(init: StringInit = {}): Validator<string> {
         value.endsWith(init.endsWith) === false
       ) {
         return diagnostics.pushError(
-          `'${value}' did not end with '${init.endsWith}'`
+          `'${value}' did not end with '${init.endsWith}'`,
         );
       }
 
       if (init.length !== undefined) {
         if (typeof init.length === "number" && value.length !== init.length) {
           return diagnostics.pushError(
-            `'${value}' did not have a length of '${init.length}'`
+            `'${value}' did not have a length of '${init.length}'`,
           );
         }
 
         if (typeof init.length === "object") {
           if (init.length.min !== undefined && value.length < init.length.min) {
             return diagnostics.pushError(
-              `'${value}' had a length less than the minimum length of '${init.length.min}'`
+              `'${value}' had a length less than the minimum length of '${init.length.min}'`,
             );
           }
 
           if (init.length.max !== undefined && value.length > init.length.max) {
             return diagnostics.pushError(
-              `'${value}' had length greater than the maximum length of '${init.length.max}'`
+              `'${value}' had length greater than the maximum length of '${init.length.max}'`,
             );
           }
         }
@@ -148,7 +147,7 @@ export function boolean(): Validator<boolean> {
   return {
     validate: (
       value: boolean,
-      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics()
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       if (value !== true && value !== false) {
         return diagnostics.pushError("the value is not of type 'boolean'");
@@ -163,7 +162,7 @@ export function number(init: NumberInit = {}): Validator<number> {
   return {
     validate: (
       value: number,
-      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics()
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       if (typeof value !== "number") {
         return diagnostics.pushError(`the value is not of type 'number'`);
@@ -171,13 +170,13 @@ export function number(init: NumberInit = {}): Validator<number> {
 
       if (init.min !== undefined && value < init.min) {
         return diagnostics.pushError(
-          `'${value}' is not greater than or equal to '${init.min}'`
+          `'${value}' is not greater than or equal to '${init.min}'`,
         );
       }
 
       if (init.max !== undefined && value > init.max) {
         return diagnostics.pushError(
-          `${value} is not less or equal to '${init.max}'`
+          `${value} is not less or equal to '${init.max}'`,
         );
       }
 
@@ -195,7 +194,7 @@ export function optional<T>(validator: Validator<T>): Validator<T | undefined> {
   return {
     validate: (
       value: T | undefined,
-      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics()
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       if (value === undefined) {
         return diagnostics;
@@ -206,11 +205,13 @@ export function optional<T>(validator: Validator<T>): Validator<T | undefined> {
 }
 
 /** Makes all properties that can be undefined also optional. */
-type MakeUndefinedOptional<T> = {
-  [K in keyof T as undefined extends T[K] ? never : K]: T[K];
-} & {
-  [K in keyof T as undefined extends T[K] ? K : never]?: T[K];
-};
+type MakeUndefinedOptional<T> =
+  & {
+    [K in keyof T as undefined extends T[K] ? never : K]: T[K];
+  }
+  & {
+    [K in keyof T as undefined extends T[K] ? K : never]?: T[K];
+  };
 
 /**
  * Creates a validator that matches objects that match the shape of the given
@@ -218,16 +219,18 @@ type MakeUndefinedOptional<T> = {
  * given validator.
  */
 export function object<T extends Record<string, Validator>>(
-  init: T
+  init: T,
 ): Validator<
-  MakeUndefinedOptional<{
-    [K in keyof T]: T[K] extends Validator<infer I> ? I : never;
-  }>
+  MakeUndefinedOptional<
+    {
+      [K in keyof T]: T[K] extends Validator<infer I> ? I : never;
+    }
+  >
 > {
   return {
     validate: (
       value: GetJasonType<ReturnType<typeof object>>,
-      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics()
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       if (typeof value !== "object") {
         return diagnostics.pushError("the value was not of type 'object'");
@@ -258,17 +261,17 @@ export interface ArrayOptions {
  */
 export function array<T extends Validator>(
   validator: T,
-  options: ArrayOptions = {}
+  options: ArrayOptions = {},
 ): Validator<GetJasonType<T>[]> {
   return {
     validate: (
       value: T[],
-      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics()
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       if (typeof options.length === "number") {
         if (value.length !== options.length) {
           return diagnostics.pushError(
-            `the array length of '${value.length} is not equal to ${options.length}'`
+            `the array length of '${value.length} is not equal to ${options.length}'`,
           );
         }
       } else if (typeof options.length === "object") {
@@ -277,14 +280,14 @@ export function array<T extends Validator>(
           value.length < options.length.min
         ) {
           return diagnostics.pushError(
-            `the array length of '${value.length} is not greater than or equal to ${options.length.min}'`
+            `the array length of '${value.length} is not greater than or equal to ${options.length.min}'`,
           );
         } else if (
           options.length.max !== undefined &&
           options.length.max > options.length.max
         ) {
           return diagnostics.pushError(
-            `the array length of '${value.length}' si not less than or equal to ${options.length.max}`
+            `the array length of '${value.length}' si not less than or equal to ${options.length.max}`,
           );
         }
       }
@@ -310,12 +313,12 @@ export function array<T extends Validator>(
  */
 export function labelled<T extends Validator>(
   label: string,
-  validator: T
+  validator: T,
 ): Validator<GetJasonType<T>> {
   return {
     validate: (
       value: GetJasonType<T>,
-      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics()
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       diagnostics.pushScope(label);
       validator.validate(value, diagnostics);

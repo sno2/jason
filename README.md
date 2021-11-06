@@ -1,6 +1,7 @@
 # jason
 
-A Deno module for building composable validators for your JavaScript data with fluid TypeScript support.
+A Deno module for building composable validators for your JavaScript data with
+fluid TypeScript support.
 
 ## Usage
 
@@ -41,7 +42,8 @@ const userSchema = jason.object({
 ```
 
 After that, you might want to be able to create a TypeScript interface/type that
-describes the shape of the `User` object. With `jason`, it's extremely simple to do by just importing our utility `GetJasonType` type:
+describes the shape of the `User` object. With `jason`, it's extremely simple to
+do by just importing our utility `GetJasonType` type:
 
 ```ts
 import type { GetJasonType } from "https://deno.land/x/jason/mod.ts";
@@ -73,7 +75,8 @@ userSchema
   .tryThrowErrors();
 ```
 
-After you run that, you will see that we get no errors! However, now let's test with some incorrect data:
+After you run that, you will see that we get no errors! However, now let's test
+with some incorrect data:
 
 ```ts
 userSchema
@@ -144,7 +147,7 @@ const schema = jason.labelled(
   jason.object({
     name: jason.string(),
     age: jason.number({ min: 0 }),
-  })
+  }),
 );
 
 const body = '{ "name": "awesomeguy23", "age": 23 }';
@@ -155,7 +158,8 @@ schema.validate(data).tryThrowErrors();
 
 ## Contributing
 
-Please format your code using `deno fmt` and make sure you run `deno test` before sending a pull request.
+Please format your code using `deno fmt` and make sure you run `deno test`
+before sending a pull request.
 
 ## License
 

@@ -5,7 +5,7 @@ const schema = jason.labelled(
   jason.object({
     name: jason.string(),
     age: jason.number({ min: 0 }),
-  })
+  }),
 );
 
 const body = '{ "name": "awesomeguy23", "age": 23 }';
