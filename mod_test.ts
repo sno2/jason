@@ -3,11 +3,7 @@
 import type { GetJasonType } from "./mod.ts";
 import * as jason from "./mod.ts";
 
-import {
-  assert,
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.113.0/testing/asserts.ts";
+import { assert } from "https://deno.land/std@0.113.0/testing/asserts.ts";
 
 Deno.test("string composable", () => {
   {
