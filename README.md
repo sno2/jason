@@ -12,7 +12,11 @@ TypeScript types and our methods.
 import * as jason from "https://deno.land/x/jason/mod.ts";
 ```
 
-## Validation Examples
+## Examples
+
+Find all examples in the [`examples` directory](./examples).
+
+## Guides
 
 ### User Object
 
@@ -91,6 +95,62 @@ After that, you'll see the following messages:
 'age': '-3' is not greater than or equal to '0'
 
 error: Uncaught TypeError: Failed to validate data. There is most likely more information above.
+```
+
+## FAQ
+
+### How do I have optional properties?
+
+All you need to do is wrap the given property with the `jason.optional`
+composable:
+
+```ts
+const schema = jason.object({
+  name: jason.string(),
+  friends: jason.optional(jason.array(jason.string())),
+});
+
+schema
+  .validate({
+    name: "Jon Doe",
+    friends: ["Jane Doe", "Billy Bob"],
+  })
+  .tryThrowErrors();
+
+schema
+  .validate({
+    name: "Jon Doe",
+  })
+  .tryThrowErrors();
+```
+
+### I am getting type errors when passing in parameters into `Validator.validate`. What am I doing wrong?
+
+The `Validator.validate` method is actually type-checked to only take in values
+that match the TypeScript version of your schema. This is to help by giving
+editor hints on properties and also help you find errors when you are validating
+data that would never pass validation. However, you can always just cast your
+value to `any` if you want to forgo type-checking.
+
+### How do I use it with JSON?
+
+All you need to do is first parse the JSON with `JSON.parse()` (or just pass in
+`Response#json` if you're using the Fetch API) into the `validate` method of
+your schema:
+
+```ts
+const schema = jason.labelled(
+  "User",
+  jason.object({
+    name: jason.string(),
+    age: jason.number({ min: 0 }),
+  })
+);
+
+const body = '{ "name": "awesomeguy23", "age": 23 }';
+const data = JSON.parse(body);
+
+schema.validate(data).tryThrowErrors();
 ```
 
 ## Contributing
