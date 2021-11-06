@@ -1,37 +1,35 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: ci
 
-# This workflow will install Deno then run Deno lint and test.
-# For more information see: https://github.com/denoland/setup-deno
-
-name: Deno
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
+  build:
+    name: tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+      fail-fast: true
     steps:
-      - name: Setup repo
-        uses: actions/checkout@v2
-
-      - name: Setup Deno
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v2
+      - name: download deno
+        uses: denoland/setup-deno@main
         with:
-          deno-version: v1.x
-          
-      - name: Verify formatting
+          deno-version: 1.x
+
+      - name: check format
+        if: matrix.os == 'ubuntu-latest'
         run: deno fmt --check
 
-      - name: Run linter
+      - name: check linting
+        if: matrix.os == 'ubuntu-latest'
         run: deno lint
 
-      - name: Run tests
-        run: deno test
+      - name: run tests
+        run: deno test --allow-read --allow-write --allow-net --jobs 4
+      
+      - name: run tests no check
+        run: deno test --allow-read --allow-write --allow-net --no-check --jobs 4
+
+      - name: run tests unstable
+        run: deno test --coverage=./cov --allow-read --allow-write --allow-net --unstable --jobs 4
