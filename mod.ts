@@ -268,6 +268,10 @@ export function array<T extends Validator>(
       value: T[],
       diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
+      if (Array.isArray(value) === false) {
+        return diagnostics.pushError("the value is not of type 'array'");
+      }
+
       if (typeof options.length === "number") {
         if (value.length !== options.length) {
           return diagnostics.pushError(
