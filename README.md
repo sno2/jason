@@ -127,6 +127,17 @@ schema
   .tryThrowErrors();
 ```
 
+### Am I restricted to having objects as the root in the schema?
+
+No!  Jason includes no magic.  Therefore, you can use all of our utility types by themselves for matching primitive and other types (i.e. `string`).
+
+```ts
+const schema = jason.string({ length: { min: 6, max: 14 } });
+
+schema.validate("123456").tryThrowErrors(); // no errors
+schema.validate("1234").tryThrowErrors(); // too short - error
+```
+
 ### I am getting type errors when passing in parameters into `Validator.validate`. What am I doing wrong?
 
 The `Validator.validate` method is actually type-checked to only take in values
