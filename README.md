@@ -129,7 +129,8 @@ schema
 
 ### Am I restricted to having objects as the root in the schema?
 
-No!  Jason includes no magic.  Therefore, you can use all of our utility types by themselves for matching primitive and other types (i.e. `string`).
+No!  Jason includes no magic.  Therefore, you can use all of our utility types by
+themselves for matching primitive and other types (i.e. `string`).
 
 ```ts
 const schema = jason.string({ length: { min: 6, max: 14 } });
