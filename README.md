@@ -129,7 +129,7 @@ schema
 
 ### Am I restricted to having objects as the root in the schema?
 
-No!  Jason includes no magic.  Therefore, you can use all of our utility types by
+No! Jason includes no magic. Therefore, you can use all of our utility types by
 themselves for matching primitive and other types (i.e. `string`).
 
 ```ts
