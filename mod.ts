@@ -330,3 +330,24 @@ export function labelled<T extends Validator>(
     },
   };
 }
+
+/** Creates a validator that matches a custom predicate */
+export function matches<T>(
+  predicate: (val: T) => boolean,
+  customErrorMsg?: string,
+): Validator<T> {
+  return {
+    validate: (
+      value: T,
+      diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
+    ) => {
+      if (!predicate(value)) {
+        diagnostics.pushError(
+          customErrorMsg ?? "Value did not match predicate",
+        );
+      }
+
+      return diagnostics;
+    },
+  };
+}
