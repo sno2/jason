@@ -339,7 +339,7 @@ export function matches<T>(predicate: (val: T) => boolean): Validator<T> {
       diagnostics: ValidatorDiagnostics = new ValidatorDiagnostics(),
     ) => {
       if (!predicate(value)) {
-        diagnostics.pushError("Value did not match predicate");
+        diagnostics.pushError(customErrorMsg ?? "Value did not match predicate");
       }
 
       return diagnostics;
