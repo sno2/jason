@@ -334,7 +334,7 @@ export function labelled<T extends Validator>(
 /** Creates a validator that matches a custom predicate */
 export function matches<T>(
   predicate: (val: T) => boolean,
-  customErrorMsg: string,
+  customErrorMsg?: string,
 ): Validator<T> {
   return {
     validate: (
