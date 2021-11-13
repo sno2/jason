@@ -181,3 +181,10 @@ Deno.test("getting jason type", () => {
     const _: GetJasonType<typeof schema> = [{ name: "" }, { name: "" }];
   }
 });
+
+Deno.test("matches composible", () => {
+  const scheme = jason.matches((val: number) => val === 12);
+
+  assert(scheme.validate(12).isOk);
+  assert(!scheme.validate(-100).isOk);
+});
